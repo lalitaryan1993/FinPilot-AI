@@ -1,8 +1,9 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { Toaster } from 'sonner';
 import { usePage } from '@inertiajs/react';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import { MobileBottomNav } from './MobileBottomNav';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import type { PageProps } from '@/types';
@@ -13,20 +14,31 @@ interface Props extends PropsWithChildren {
 
 export function AppLayout({ children, title }: Props) {
     const { auth } = usePage<PageProps>().props;
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
     return (
         <ThemeProvider>
         <CurrencyProvider>
             <div className="flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--fp-bg, #0A1628)' }}>
-                <Sidebar user={auth.user} />
+                <Sidebar
+                    user={auth.user}
+                    mobileOpen={mobileSidebarOpen}
+                    onMobileClose={() => setMobileSidebarOpen(false)}
+                />
 
-                <div className="flex flex-1 flex-col overflow-hidden">
-                    <TopBar title={title} user={auth.user} />
+                <div className="flex flex-1 flex-col overflow-hidden min-w-0">
+                    <TopBar
+                        title={title}
+                        user={auth.user}
+                        onMenuClick={() => setMobileSidebarOpen(true)}
+                    />
 
-                    <main className="flex-1 overflow-y-auto">
+                    <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
                         {children}
                     </main>
                 </div>
+
+                <MobileBottomNav onMenuClick={() => setMobileSidebarOpen(true)} />
 
                 <Toaster
                     position="top-right"

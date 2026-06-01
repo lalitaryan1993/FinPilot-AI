@@ -43,7 +43,7 @@ export default function Dashboard() {
             <Head title="Dashboard" />
 
             <motion.div
-                className="p-6 space-y-6"
+                className="p-4 lg:p-6 space-y-4 lg:space-y-6"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"

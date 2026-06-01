@@ -18,7 +18,7 @@ export function FormLayout({ title, subtitle, backHref, onSave, saving, saveLabe
         <AppLayout>
             <div className="flex flex-col h-full">
                 {/* sticky top bar */}
-                <div className="sticky top-0 z-20 flex items-center gap-4 border-b border-white/8 bg-[var(--fp-bg,#0A1628)]/90 backdrop-blur-md px-6 py-4">
+                <div className="sticky top-0 z-20 flex items-center gap-2 sm:gap-4 border-b border-white/8 bg-[var(--fp-bg,#0A1628)]/90 backdrop-blur-md px-4 sm:px-6 py-4">
                     <button
                         onClick={() => router.visit(backHref)}
                         className="flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm text-white/60 hover:text-white hover:border-white/25 transition-all"
@@ -50,7 +50,7 @@ export function FormLayout({ title, subtitle, backHref, onSave, saving, saveLabe
 
                 {/* scrollable form body */}
                 <div className="flex-1 overflow-y-auto">
-                    <div className="mx-auto max-w-2xl px-6 py-8 space-y-6">
+                    <div className="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8 space-y-6">
                         {children}
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export function FormSection({ title, children }: { title?: string; children: Rea
 }
 
 export function FormRow({ children }: { children: ReactNode }) {
-    return <div className="grid grid-cols-2 gap-4">{children}</div>;
+    return <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>;
 }
 
 interface FieldProps {

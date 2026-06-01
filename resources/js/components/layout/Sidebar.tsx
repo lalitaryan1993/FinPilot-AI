@@ -5,7 +5,7 @@ import {
     LayoutDashboard, TrendingUp, Target, TrendingDown,
     BarChart3, FileText, Users,
     Bot, ChevronRight, Wallet, Receipt, LogOut, User, ChevronUp,
-    DollarSign, RefreshCcw, MessageSquare, Sparkles, KeyRound, Zap, Repeat2, Bell,
+    DollarSign, RefreshCcw, MessageSquare, Sparkles, KeyRound, Zap, Repeat2, Bell, X,
 } from 'lucide-react';
 import { cn, getInitials } from '@/lib/utils';
 import type { User as UserType } from '@/types';
@@ -29,6 +29,8 @@ const navItems = [
 
 interface Props {
     user: UserType;
+    mobileOpen?: boolean;
+    onMobileClose?: () => void;
 }
 
 const popupVariants = {
@@ -37,7 +39,7 @@ const popupVariants = {
     exit:    { opacity: 0, y: 6, scale: 0.97, transition: { duration: 0.12 } },
 };
 
-export function Sidebar({ user }: Props) {
+export function Sidebar({ user, mobileOpen = false, onMobileClose }: Props) {
     const { url } = usePage();
     const [menuOpen,   setMenuOpen]   = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
@@ -58,16 +60,44 @@ export function Sidebar({ user }: Props) {
     };
 
     return (
-        <aside className="sidebar hidden w-64 flex-shrink-0 lg:flex flex-col">
+        <>
+            {/* Mobile backdrop */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <motion.div
+                        key="sidebar-backdrop"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+                        onClick={onMobileClose}
+                    />
+                )}
+            </AnimatePresence>
+
+            <aside className={cn(
+                'sidebar flex flex-col flex-shrink-0',
+                'fixed inset-y-0 left-0 z-50 w-64',
+                'transition-transform duration-300 ease-in-out',
+                mobileOpen ? 'translate-x-0' : '-translate-x-full',
+                'lg:relative lg:translate-x-0 lg:flex',
+            )}>
             {/* Logo */}
             <div className="flex items-center gap-3 px-6 py-5 border-b border-white/8">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#F5C842] to-[#EAB308] shadow-[0_0_16px_rgba(245,200,66,0.4)]">
                     <Bot className="h-5 w-5 text-[#0A1628]" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold tracking-tight text-white">FinPilot AI</div>
                     <div className="text-[10px] text-white/40 leading-none">Financial OS</div>
                 </div>
+                <button
+                    onClick={onMobileClose}
+                    className="lg:hidden flex h-7 w-7 items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/8 transition-colors"
+                >
+                    <X className="h-4 w-4" />
+                </button>
             </div>
 
             {/* Navigation */}
@@ -79,6 +109,7 @@ export function Sidebar({ user }: Props) {
                             <Link
                                 key={item.href}
                                 href={item.href}
+                                onClick={onMobileClose}
                                 className={cn(
                                     'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
                                     active
@@ -213,6 +244,7 @@ export function Sidebar({ user }: Props) {
                     </motion.div>
                 </button>
             </div>
-        </aside>
+            </aside>
+        </>
     );
 }

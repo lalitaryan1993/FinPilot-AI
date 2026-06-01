@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Bell, Sparkles, Settings, LogOut, User, ChevronRight,
     AlertTriangle, TrendingUp, CreditCard, Target, CheckCircle2,
-    Palette, Zap,
+    Palette, Zap, Menu,
 } from 'lucide-react';
 import { cn, getInitials } from '@/lib/utils';
 import { ThemePanel } from './ThemePanel';
@@ -13,6 +13,7 @@ import type { User as UserType } from '@/types';
 interface Props {
     title?: string;
     user: UserType;
+    onMenuClick?: () => void;
 }
 
 interface ApiNotification {
@@ -67,7 +68,7 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () =
     }, [ref, handler]);
 }
 
-export function TopBar({ title, user }: Props) {
+export function TopBar({ title, user, onMenuClick }: Props) {
     const [notifOpen,      setNotifOpen]      = useState(false);
     const [userOpen,       setUserOpen]        = useState(false);
     const [themeOpen,      setThemeOpen]       = useState(false);
@@ -139,9 +140,17 @@ export function TopBar({ title, user }: Props) {
     return (
         <>
             {/* ── z-30 gives the header a stacking context ABOVE main content ── */}
-            <header className="relative z-30 flex h-14 flex-shrink-0 items-center gap-4 border-b border-white/8 bg-[#0A1628]/90 px-6 backdrop-blur-xl">
-                <div className="flex-1">
-                    {title && <h1 className="text-sm font-semibold text-white/80">{title}</h1>}
+            <header className="relative z-30 flex h-14 flex-shrink-0 items-center gap-2 border-b border-white/8 bg-[#0A1628]/90 px-4 lg:px-6 backdrop-blur-xl">
+                {/* Hamburger — mobile only */}
+                <button
+                    onClick={onMenuClick}
+                    className="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/5 hover:text-white transition-colors flex-shrink-0"
+                >
+                    <Menu className="h-5 w-5" />
+                </button>
+
+                <div className="flex-1 min-w-0">
+                    {title && <h1 className="text-sm font-semibold text-white/80 truncate">{title}</h1>}
                 </div>
 
                 <div className="flex items-center gap-1.5">
