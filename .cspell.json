@@ -1,0 +1,35 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "words": [
+        "laravel", "Laravel", "inertiajs", "tightenco", "ziggy",
+        "spatie", "activitylog", "barryvdh", "dompdf",
+        "sanctum", "reverb", "telescope", "horizon",
+        "zustand", "tanstack", "lucide", "sonner", "cmdk", "vaul",
+        "recharts", "Recharts", "framer",
+        "Shadcn", "shadcn", "glassmorphism", "glassmorphic",
+        "Groq", "groq", "Ollama", "ollama", "Anthropic", "anthropic",
+        "Gemini", "gemini", "OpenAI", "openai", "openrouter",
+        "Intelephense", "intelephense", "pcntl", "posix",
+        "meilisearch", "Meilisearch",
+        "finpilot", "FinPilot", "FINPILOT",
+        "HDFC", "ICICI", "AMFI", "XAMPP", "GROQ",
+        "topbar", "TopBar", "SPA", "SSE", "SSR",
+        "CIBIL", "SEBI", "ELSS", "LTCG", "STCG", "TDS",
+        "HRA", "EPF", "PPF", "NPS", "SIP", "XIRR", "CAGR",
+        "EMI", "ETF", "GST", "ITR",
+        "upi", "UPI", "php", "artisan",
+        "tailwindcss", "vite", "Vite",
+        "Inertia", "inertia", "Sanctum",
+        "autofill", "autorestart", "autostart",
+        "phpredis", "predis",
+        "dmarc", "smtp", "SMTP"
+    ],
+    "ignorePaths": [
+        "vendor/**",
+        "node_modules/**",
+        "public/build/**",
+        "storage/**",
+        ".git/**"
+    ]
+}

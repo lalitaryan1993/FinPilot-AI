@@ -1,0 +1,198 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* FinPilot AI Design System */
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+    /* Navy Foundation */
+    --color-navy-950: #020817;
+    --color-navy-900: #0A1628;
+    --color-navy-800: #0F1F3D;
+    --color-navy-700: #162844;
+    --color-navy-600: #1E3A5F;
+
+    /* Gold Accent */
+    --color-gold-400: #F5C842;
+    --color-gold-500: #EAB308;
+    --color-gold-600: #CA8A04;
+
+    /* FinPilot Semantic */
+    --color-fp-bg: #0A1628;
+    --color-fp-surface: rgba(255,255,255,0.04);
+    --color-fp-border: rgba(255,255,255,0.10);
+    --color-fp-gold: #F5C842;
+    --color-fp-text: #F8FAFC;
+    --color-fp-muted: #94A3B8;
+}
+
+/* ============================================================
+   RUNTIME THEME TOKENS — toggled via data-theme / data-accent
+   ============================================================ */
+
+:root,
+[data-theme="navy"] {
+    --fp-bg:          #0A1628;
+    --fp-surface:     #0F1F3D;
+    --fp-surface-2:   #162844;
+    --fp-border:      rgba(255,255,255,0.09);
+    --fp-sidebar-bg:  rgba(10,22,40,0.94);
+    --fp-glow-base:   rgba(59,130,246,0.12);
+}
+[data-theme="midnight"] {
+    --fp-bg:          #050A0E;
+    --fp-surface:     #0D1117;
+    --fp-surface-2:   #131C27;
+    --fp-border:      rgba(255,255,255,0.07);
+    --fp-sidebar-bg:  rgba(5,10,14,0.96);
+    --fp-glow-base:   rgba(99,102,241,0.10);
+}
+[data-theme="purple"] {
+    --fp-bg:          #0C0917;
+    --fp-surface:     #160F2E;
+    --fp-surface-2:   #1E1540;
+    --fp-border:      rgba(255,255,255,0.09);
+    --fp-sidebar-bg:  rgba(12,9,23,0.94);
+    --fp-glow-base:   rgba(139,92,246,0.12);
+}
+[data-theme="emerald"] {
+    --fp-bg:          #071A12;
+    --fp-surface:     #0D2B1C;
+    --fp-surface-2:   #133625;
+    --fp-border:      rgba(255,255,255,0.08);
+    --fp-sidebar-bg:  rgba(7,26,18,0.94);
+    --fp-glow-base:   rgba(16,185,129,0.10);
+}
+[data-theme="rose"] {
+    --fp-bg:          #180A10;
+    --fp-surface:     #2A0F1A;
+    --fp-surface-2:   #361626;
+    --fp-border:      rgba(255,255,255,0.08);
+    --fp-sidebar-bg:  rgba(24,10,16,0.94);
+    --fp-glow-base:   rgba(244,63,94,0.10);
+}
+[data-theme="slate"] {
+    --fp-bg:          #0A0F1A;
+    --fp-surface:     #131B2E;
+    --fp-surface-2:   #1A2540;
+    --fp-border:      rgba(255,255,255,0.08);
+    --fp-sidebar-bg:  rgba(10,15,26,0.94);
+    --fp-glow-base:   rgba(100,116,139,0.10);
+}
+
+/* Accent color tokens */
+:root,
+[data-accent="gold"]    { --fp-accent: #F5C842; --fp-accent-rgb: 245,200,66;  --fp-accent-dim: rgba(245,200,66,0.15); --fp-accent-text: #0A1628; }
+[data-accent="blue"]    { --fp-accent: #3B82F6; --fp-accent-rgb: 59,130,246;  --fp-accent-dim: rgba(59,130,246,0.15); --fp-accent-text: #ffffff; }
+[data-accent="emerald"] { --fp-accent: #10B981; --fp-accent-rgb: 16,185,129;  --fp-accent-dim: rgba(16,185,129,0.15); --fp-accent-text: #ffffff; }
+[data-accent="purple"]  { --fp-accent: #8B5CF6; --fp-accent-rgb: 139,92,246;  --fp-accent-dim: rgba(139,92,246,0.15); --fp-accent-text: #ffffff; }
+[data-accent="rose"]    { --fp-accent: #F43F5E; --fp-accent-rgb: 244,63,94;   --fp-accent-dim: rgba(244,63,94,0.15);  --fp-accent-text: #ffffff; }
+[data-accent="cyan"]    { --fp-accent: #06B6D4; --fp-accent-rgb: 6,182,212;   --fp-accent-dim: rgba(6,182,212,0.15);  --fp-accent-text: #ffffff; }
+
+/* Sidebar density */
+[data-density="compact"] .sidebar nav a { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+[data-density="compact"] .sidebar nav a span { font-size: 0.8125rem; }
+
+/* === BASE === */
+@layer base {
+    html {
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: #0A1628;
+        color: #F8FAFC;
+        font-family: 'Inter', system-ui, sans-serif;
+        min-height: 100dvh;
+    }
+
+    :focus-visible {
+        outline: 2px solid #3B82F6;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+    /* Tabular nums for all financial figures */
+    [data-financial] { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+}
+
+/* === COMPONENTS === */
+@layer components {
+    /* Glassmorphism Cards */
+    .glass-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.10);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.40);
+        border-radius: 0.75rem;
+    }
+    .glass-card-gold { box-shadow: 0 4px 24px rgba(0,0,0,0.40), 0 0 32px rgba(245,200,66,0.15); }
+    .glass-card-blue { box-shadow: 0 4px 24px rgba(0,0,0,0.40), 0 0 32px rgba(59,130,246,0.15); }
+    .glass-card-green { box-shadow: 0 4px 24px rgba(0,0,0,0.40), 0 0 32px rgba(16,185,129,0.15); }
+    .glass-card-red { box-shadow: 0 4px 24px rgba(0,0,0,0.40), 0 0 32px rgba(239,68,68,0.15); }
+
+    /* Sidebar */
+    .sidebar { background: var(--fp-sidebar-bg, rgba(10,22,40,0.92)); border-right: 1px solid var(--fp-border, rgba(255,255,255,0.08)); backdrop-filter: blur(24px); }
+
+    /* Nav item active */
+    .nav-active { background: rgba(59,130,246,0.12); border-right: 2px solid #3B82F6; color: #3B82F6; }
+
+    /* Gradient text */
+    .text-gradient-gold {
+        background: linear-gradient(135deg, #F5C842, #EAB308);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .text-gradient-blue {
+        background: linear-gradient(135deg, #60A5FA, #3B82F6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Metric card gradients */
+    .metric-income { background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05)); border-color: rgba(16,185,129,0.20); }
+    .metric-expense { background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05)); border-color: rgba(239,68,68,0.20); }
+    .metric-savings { background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05)); border-color: rgba(59,130,246,0.20); }
+    .metric-net { background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(245,200,66,0.05)); border-color: rgba(245,200,66,0.20); }
+
+    /* Trend badges */
+    .trend-up { color: #10B981; background: rgba(16,185,129,0.10); border-radius: 9999px; }
+    .trend-down { color: #EF4444; background: rgba(239,68,68,0.10); border-radius: 9999px; }
+    .trend-neutral { color: #94A3B8; background: rgba(148,163,184,0.10); border-radius: 9999px; }
+
+    /* Chat bubbles */
+    .chat-user { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.22); }
+    .chat-ai { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+    .chat-typing { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+
+    /* Skeleton loader */
+    .skeleton {
+        background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 0.375rem;
+    }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    /* Health score ring glow */
+    .health-ring-glow { filter: drop-shadow(0 0 12px rgba(245,200,66,0.5)); }
+
+    /* Budget progress bar glow */
+    .progress-safe { box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+    .progress-warning { box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+    .progress-danger { box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+}
