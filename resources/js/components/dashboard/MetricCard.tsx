@@ -12,6 +12,7 @@ interface Props {
     icon: LucideIcon;
     variant: 'income' | 'expense' | 'savings' | 'net';
     index?: number;
+    isPercent?: boolean;
 }
 
 const variantClasses = {
@@ -28,7 +29,7 @@ const variantIconColors = {
     net:     'text-yellow-400',
 };
 
-export function MetricCard({ label, amount, currency = 'INR', trend, icon: Icon, variant, index = 0 }: Props) {
+export function MetricCard({ label, amount, currency = 'INR', trend, icon: Icon, variant, index = 0, isPercent = false }: Props) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -42,14 +43,20 @@ export function MetricCard({ label, amount, currency = 'INR', trend, icon: Icon,
                         <Icon className="h-3.5 w-3.5" />
                     </div>
                 </div>
-                <CurrencyDisplay
-                    amount={amount}
-                    currency={currency}
-                    size="2xl"
-                    trend={trend}
-                    compact
-                    className="text-white"
-                />
+                {isPercent ? (
+                    <span className="font-mono tabular-nums font-semibold text-2xl text-white">
+                        {amount.toFixed(1)}%
+                    </span>
+                ) : (
+                    <CurrencyDisplay
+                        amount={amount}
+                        currency={currency}
+                        size="2xl"
+                        trend={trend}
+                        compact
+                        className="text-white"
+                    />
+                )}
             </GlassCard>
         </motion.div>
     );

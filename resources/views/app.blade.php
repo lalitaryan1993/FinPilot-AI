@@ -12,7 +12,12 @@
     <meta name="apple-mobile-web-app-title" content="FinPilot">
 
     <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/ios/32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/ios/16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/ios/180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/ios/167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/ios/152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/ios/120.png">
 
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

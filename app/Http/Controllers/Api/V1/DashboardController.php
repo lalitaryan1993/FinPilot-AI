@@ -100,9 +100,9 @@ class DashboardController extends Controller
                     'currency'           => $user->currency,
                 ],
                 'health_score'       => $healthScore ? [
-                    'total'    => $healthScore->total_score,
-                    'grade'    => $healthScore->grade(),
-                    'color'    => $healthScore->gradeColor(),
+                    'total_score' => $healthScore->total_score,
+                    'grade'       => $healthScore->grade(),
+                    'color'       => $healthScore->gradeColor(),
                     'scores'   => [
                         'savings'   => $healthScore->savings_score,
                         'debt'      => $healthScore->debt_score,

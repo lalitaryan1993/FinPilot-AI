@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/icons/icon-192.png" alt="FinPilot AI Logo" width="96" height="96" />
+<img src="public/icons/FinPilot-AI-icon.png" alt="FinPilot AI Logo" width="96" height="96" />
 
 # FinPilot AI
 
@@ -40,7 +40,48 @@ Most finance apps are either too simple or locked behind a subscription. FinPilo
 
 ## Screenshots
 
-> *Add screenshots after deployment. Suggested: Dashboard, Expenses card view, Money Flow statement, Budget alerts, Investment XIRR, Smart Import review.*
+<table>
+  <tr>
+    <td align="center"><b>Dashboard</b></td>
+    <td align="center"><b>Expenses</b></td>
+  </tr>
+  <tr>
+    <td><img src="public/screenshots/01-dashboard.png" alt="Dashboard" /></td>
+    <td><img src="public/screenshots/02-expenses.png" alt="Expenses" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Budget</b></td>
+    <td align="center"><b>Goals</b></td>
+  </tr>
+  <tr>
+    <td><img src="public/screenshots/03-budget.png" alt="Budget" /></td>
+    <td><img src="public/screenshots/04-goals.png" alt="Goals" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Money Flow</b></td>
+    <td align="center"><b>Reports</b></td>
+  </tr>
+  <tr>
+    <td><img src="public/screenshots/05-money-flow.png" alt="Money Flow" /></td>
+    <td><img src="public/screenshots/06-reports.png" alt="Reports" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>AI Chat</b></td>
+    <td align="center"><b>Smart Import</b></td>
+  </tr>
+  <tr>
+    <td><img src="public/screenshots/07-ai-chat.png" alt="AI Chat" /></td>
+    <td><img src="public/screenshots/08-smart-import.png" alt="Smart Import" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>AI Configuration</b></td>
+    <td align="center"></td>
+  </tr>
+  <tr>
+    <td><img src="public/screenshots/09-ai-configuration.png" alt="AI Configuration" /></td>
+    <td></td>
+  </tr>
+</table>
 
 ---
 

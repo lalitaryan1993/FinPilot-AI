@@ -86,6 +86,7 @@ export default function Dashboard() {
                                 icon={Activity}
                                 variant="net"
                                 index={3}
+                                isPercent
                             />
                         </>
                     ) : null}
