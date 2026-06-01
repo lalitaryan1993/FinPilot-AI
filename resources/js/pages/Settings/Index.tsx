@@ -100,6 +100,10 @@ export default function SettingsIndex() {
         mutationFn: updateProfile,
         onSuccess: () => { setSaved('profile'); setTimeout(() => setSaved(null), 2500); },
     });
+    const notifMut = useMutation({
+        mutationFn: () => updateProfile({ notification_preferences: notif }),
+        onSuccess: () => { setSaved('notif'); setTimeout(() => setSaved(null), 2500); },
+    });
     const pwMut = useMutation({
         mutationFn: changePassword,
         onSuccess: () => { setPwForm({ current_password: '', password: '', password_confirmation: '' }); setSaved('password'); setTimeout(() => setSaved(null), 2500); setPwErr(''); },
@@ -266,9 +270,17 @@ export default function SettingsIndex() {
                                 </div>
                             </div>
                         ))}
-                        <div className="flex justify-end pt-1">
-                            <button className="flex items-center gap-2 rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-400 transition-all">
-                                <Save className="h-4 w-4" /> Save Notifications
+                        <div className="flex items-center justify-end gap-3 pt-1">
+                            {saved === 'notif' && (
+                                <motion.span initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-1.5 text-sm text-emerald-400">
+                                    <Check className="h-4 w-4" /> Saved
+                                </motion.span>
+                            )}
+                            <button
+                                onClick={() => notifMut.mutate()}
+                                disabled={notifMut.isPending}
+                                className="flex items-center gap-2 rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-400 disabled:opacity-60 transition-all">
+                                {notifMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Save className="h-4 w-4" /> Save Notifications</>}
                             </button>
                         </div>
                     </div>

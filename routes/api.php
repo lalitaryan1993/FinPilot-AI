@@ -45,11 +45,12 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/auth/me',      [LoginController::class, 'me']);
     Route::put('/auth/me', function (Request $request) {
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:255',
-            'email'    => 'sometimes|email|unique:users,email,' . $request->user()->id,
-            'phone'    => 'nullable|string|max:20',
-            'currency' => 'sometimes|string|size:3',
-            'timezone' => 'sometimes|string|max:50',
+            'name'                     => 'sometimes|string|max:255',
+            'email'                    => 'sometimes|email|unique:users,email,' . $request->user()->id,
+            'phone'                    => 'nullable|string|max:20',
+            'currency'                 => 'sometimes|string|size:3',
+            'timezone'                 => 'sometimes|string|max:50',
+            'notification_preferences' => 'sometimes|array',
         ]);
         $request->user()->update($validated);
         return response()->json(['success' => true, 'data' => $request->user()->fresh()]);

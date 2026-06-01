@@ -10,6 +10,7 @@ import {
     BarChart3, TrendingUp, TrendingDown, PiggyBank,
     Download, ChevronLeft, ChevronRight,
     IndianRupee, Percent, Target, CreditCard,
+    FileSpreadsheet, FileText, Receipt,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -75,6 +76,7 @@ function Metric({ label, value, icon: Icon, trend, color }: { label: string; val
 // ─── Page ────────────────────────────────────────────────────────
 export default function ReportsIndex() {
     const [reportMonth, setReportMonth] = useState(new Date());
+    const [taxYear,     setTaxYear]     = useState(new Date().getFullYear());
     const monthStr = format(reportMonth, 'yyyy-MM');
 
     const { data: dashboard, isLoading: dashLoading } = useQuery({ queryKey: ['dashboard'], queryFn: fetchDashboard, staleTime: 60_000 });
@@ -104,7 +106,7 @@ export default function ReportsIndex() {
                         <h2 className="text-xl font-bold text-white">Reports</h2>
                         <p className="mt-0.5 text-sm text-white/40">Financial overview and spending analysis</p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
                         {/* Month navigator */}
                         <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/4 p-1">
                             <button onClick={() => setReportMonth((m) => subMonths(m, 1))} className="rounded-lg p-1.5 text-white/50 hover:bg-white/8 hover:text-white"><ChevronLeft className="h-4 w-4" /></button>
@@ -112,10 +114,16 @@ export default function ReportsIndex() {
                             <button onClick={() => setReportMonth((m) => subMonths(m, -1))} className="rounded-lg p-1.5 text-white/50 hover:bg-white/8 hover:text-white"><ChevronRight className="h-4 w-4" /></button>
                         </div>
                         <button
+                            onClick={() => window.open(`/api/v1/export/expenses.csv?month=${monthStr}`, '_blank')}
+                            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/4 px-4 py-2.5 text-sm font-medium text-white/60 hover:bg-white/8 hover:text-white transition-colors"
+                        >
+                            <FileSpreadsheet className="h-4 w-4" /> CSV
+                        </button>
+                        <button
                             onClick={() => window.open(`/api/v1/export/report.pdf?month=${monthStr}`, '_blank')}
                             className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/4 px-4 py-2.5 text-sm font-medium text-white/60 hover:bg-white/8 hover:text-white transition-colors"
                         >
-                            <Download className="h-4 w-4" /> Export PDF
+                            <Download className="h-4 w-4" /> PDF
                         </button>
                     </div>
                 </div>
@@ -264,6 +272,72 @@ export default function ReportsIndex() {
                             </BarChart>
                         </ResponsiveContainer>
                     )}
+                </GlassCard>
+
+                {/* ITR / Tax Summary ── */}
+                <GlassCard className="p-5">
+                    <div className="mb-5 flex items-center justify-between flex-wrap gap-3">
+                        <div className="flex items-center gap-2">
+                            <Receipt className="h-4 w-4 text-amber-400" />
+                            <h3 className="text-sm font-semibold text-white">Income Tax Summary (Old Regime)</h3>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            {/* Year picker */}
+                            <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/4 p-1">
+                                <button
+                                    onClick={() => setTaxYear((y) => y - 1)}
+                                    className="rounded-lg p-1.5 text-white/50 hover:bg-white/8 hover:text-white"
+                                >
+                                    <ChevronLeft className="h-4 w-4" />
+                                </button>
+                                <span className="min-w-[64px] text-center text-sm font-medium text-white">FY {taxYear}–{String(taxYear + 1).slice(2)}</span>
+                                <button
+                                    onClick={() => setTaxYear((y) => Math.min(new Date().getFullYear(), y + 1))}
+                                    className="rounded-lg p-1.5 text-white/50 hover:bg-white/8 hover:text-white"
+                                >
+                                    <ChevronRight className="h-4 w-4" />
+                                </button>
+                            </div>
+                            <button
+                                onClick={() => window.open(`/api/v1/export/tax-summary.pdf?year=${taxYear}`, '_blank')}
+                                className="flex items-center gap-2 rounded-xl bg-amber-500/12 border border-amber-500/25 px-4 py-2.5 text-sm font-medium text-amber-300 hover:bg-amber-500/20 transition-colors"
+                            >
+                                <FileText className="h-4 w-4" /> Download ITR Summary
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2 text-sm">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-white/30 mb-3">What's included</p>
+                            {[
+                                { label: 'Salary income (annualised)',       color: 'text-white' },
+                                { label: 'Standard Deduction (Sec. 16)',    color: 'text-green-400' },
+                                { label: 'Section 80C — ELSS, PPF, NPS, FD', color: 'text-green-400' },
+                                { label: 'Home Loan Interest (Sec. 24b)',   color: 'text-green-400' },
+                                { label: 'Estimated taxable income',         color: 'text-amber-400' },
+                                { label: 'Tax liability (old regime slabs)', color: 'text-red-400' },
+                            ].map(({ label, color }) => (
+                                <div key={label} className="flex items-center gap-2">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-white/20 flex-shrink-0" />
+                                    <span className={cn('text-xs', color)}>{label}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="rounded-xl border border-amber-500/15 bg-amber-500/5 p-4">
+                            <p className="text-xs font-semibold text-amber-300 mb-2">How to use</p>
+                            <ol className="space-y-1.5 text-xs text-white/50 list-decimal list-inside">
+                                <li>Select the financial year above</li>
+                                <li>Click "Download ITR Summary" to get a PDF</li>
+                                <li>Use it as a reference when filing ITR on the income tax portal</li>
+                                <li>Share with your CA for professional assistance</li>
+                            </ol>
+                            <p className="mt-3 text-[10px] text-white/25 italic">
+                                Estimates are based on your FinPilot data. Consult a CA for official filing.
+                            </p>
+                        </div>
+                    </div>
                 </GlassCard>
             </div>
         </AppLayout>

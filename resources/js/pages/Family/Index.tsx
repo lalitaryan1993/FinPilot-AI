@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Users, Plus, X, Copy, Check, Crown,
     Shield, Eye, User, Wallet, Target, Receipt,
-    TrendingDown, Share2,
+    TrendingDown, Share2, KeyRound, Loader2, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import type { PageProps } from '@/types';
@@ -66,6 +66,81 @@ async function fetchFamily(): Promise<FamilyData | null> {
     } catch {
         return null;
     }
+}
+
+// ─── Join with Code Modal ─────────────────────────────────────────────────────
+function JoinWithCodeModal({ onClose, onJoined }: { onClose: () => void; onJoined: () => void }) {
+    const [code,     setCode]     = useState('');
+    const [relation, setRelation] = useState('other');
+    const [error,    setError]    = useState('');
+
+    const mut = useMutation({
+        mutationFn: async () => {
+            const r = await fetch('/api/v1/family/join', {
+                method: 'POST', credentials: 'include',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf() },
+                body: JSON.stringify({ invite_code: code.trim().toUpperCase(), relation }),
+            });
+            const j = await r.json();
+            if (!j.success) throw new Error(j.message ?? 'Invalid code');
+            return j;
+        },
+        onSuccess: () => { onJoined(); onClose(); },
+        onError:   (e: Error) => setError(e.message),
+    });
+
+    return (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="relative z-10 w-full max-w-sm rounded-2xl bg-[#0F1F3D] border border-white/10 shadow-2xl p-6"
+            >
+                <button onClick={onClose} className="absolute top-4 right-4 text-white/40 hover:text-white"><X size={18} /></button>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/15 mx-auto mb-4">
+                    <KeyRound size={22} className="text-blue-400" />
+                </div>
+                <h3 className="font-semibold text-white text-center mb-1">Join a Family Group</h3>
+                <p className="text-xs text-white/50 text-center mb-5">Enter the 8-character invite code shared by your family member.</p>
+
+                <label className="text-xs text-white/50 mb-1 block">Invite Code</label>
+                <input
+                    value={code}
+                    onChange={e => { setCode(e.target.value.toUpperCase()); setError(''); }}
+                    maxLength={8}
+                    placeholder="e.g. ABCD1234"
+                    className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2.5 text-center text-lg font-mono font-bold tracking-widest text-white placeholder-white/20 focus:outline-none focus:border-blue-500 mb-4"
+                />
+
+                <label className="text-xs text-white/50 mb-1 block">Your Relation</label>
+                <select
+                    value={relation}
+                    onChange={e => setRelation(e.target.value)}
+                    className="w-full appearance-none rounded-lg bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 mb-4"
+                >
+                    {['spouse','child','parent','sibling','other'].map(r => (
+                        <option key={r} value={r} className="bg-navy-900">{r.charAt(0).toUpperCase() + r.slice(1)}</option>
+                    ))}
+                </select>
+
+                {error && <p className="mb-3 rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">{error}</p>}
+
+                <div className="flex gap-3">
+                    <button onClick={onClose} className="flex-1 rounded-lg border border-white/10 py-2.5 text-sm text-white/60 hover:text-white transition-colors">Cancel</button>
+                    <button
+                        onClick={() => mut.mutate()}
+                        disabled={code.length < 6 || mut.isPending}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-500 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
+                    >
+                        {mut.isPending ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                        Join Group
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+    );
 }
 
 // ─── Create Family Modal ──────────────────────────────────────────────────────
@@ -187,7 +262,7 @@ function MemberCard({ member, isOwner }: { member: FamilyMember; isOwner: boolea
 }
 
 // ─── Empty State ──────────────────────────────────────────────────────────────
-function EmptyFamily({ onCreate }: { onCreate: () => void }) {
+function EmptyFamily({ onCreate, onJoin }: { onCreate: () => void; onJoin: () => void }) {
     return (
         <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="w-20 h-20 rounded-3xl bg-blue-500/10 flex items-center justify-center mb-6">
@@ -202,10 +277,76 @@ function EmptyFamily({ onCreate }: { onCreate: () => void }) {
                     className="flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors">
                     <Plus size={16} /> Create Family Group
                 </button>
-                <button className="flex items-center gap-2 rounded-xl border border-white/15 hover:border-white/30 px-6 py-3 text-sm font-medium text-white/70 hover:text-white transition-all">
-                    Join with Code
+                <button onClick={onJoin} className="flex items-center gap-2 rounded-xl border border-white/15 hover:border-blue-500/40 hover:border-white/30 px-6 py-3 text-sm font-medium text-white/70 hover:text-white transition-all">
+                    <KeyRound size={16} /> Join with Code
                 </button>
             </div>
+        </div>
+    );
+}
+
+// ─── Shared Expenses section ──────────────────────────────────────────────────
+function SharedExpensesPanel({ familyId }: { familyId: number }) {
+    const [month, setMonth] = useState(new Date());
+    const monthStr = month.toISOString().slice(0, 7);
+
+    const { data: expenses = [], isLoading } = useQuery({
+        queryKey: ['family-shared-expenses', monthStr],
+        queryFn: async () => {
+            const r = await fetch(`/api/v1/family/shared-expenses?month=${monthStr}`, { credentials: 'include' });
+            return (await r.json()).data ?? [];
+        },
+        enabled: !!familyId,
+    });
+
+    const prevMonth = () => setMonth(m => { const d = new Date(m); d.setMonth(d.getMonth() - 1); return d; });
+    const nextMonth = () => setMonth(m => { const d = new Date(m); d.setMonth(d.getMonth() + 1); return d; });
+
+    const total = expenses.reduce((s: number, e: { amount: number }) => s + Number(e.amount), 0);
+
+    return (
+        <div>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-semibold text-white">Shared Expenses</h2>
+                <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/4 p-1">
+                    <button onClick={prevMonth} className="rounded-lg p-1.5 text-white/50 hover:bg-white/8 hover:text-white"><ChevronLeft size={14} /></button>
+                    <span className="min-w-[80px] text-center text-xs font-medium text-white">
+                        {month.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
+                    </span>
+                    <button onClick={nextMonth} className="rounded-lg p-1.5 text-white/50 hover:bg-white/8 hover:text-white"><ChevronRight size={14} /></button>
+                </div>
+            </div>
+
+            {isLoading ? (
+                <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-12 rounded-xl bg-white/5 animate-pulse" />)}</div>
+            ) : expenses.length === 0 ? (
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 py-10 text-white/30">
+                    <Receipt size={28} className="mb-2" />
+                    <p className="text-sm">No shared expenses this month</p>
+                    <p className="text-xs mt-1">Expenses shared with the family will appear here</p>
+                </div>
+            ) : (
+                <>
+                    <div className="space-y-2">
+                        {expenses.map((e: { id: number; description: string; amount: number; expense_date: string; user_name: string; category?: { name: string; color: string } }) => (
+                            <div key={e.id} className="flex items-center gap-3 rounded-xl bg-white/4 border border-white/6 px-4 py-3">
+                                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg" style={{ background: `${e.category?.color ?? '#6B7280'}18` }}>
+                                    <Receipt size={14} style={{ color: e.category?.color ?? '#6B7280' }} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm text-white truncate">{e.description}</p>
+                                    <p className="text-xs text-white/40">{e.user_name} · {e.expense_date}</p>
+                                </div>
+                                <span className="text-sm font-semibold tabular-nums text-white flex-shrink-0">{fmt(Number(e.amount))}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="mt-3 flex justify-between items-center rounded-xl bg-white/5 px-4 py-3">
+                        <span className="text-xs text-white/50">Total this month</span>
+                        <span className="text-sm font-bold text-white tabular-nums">{fmt(total)}</span>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
@@ -215,6 +356,7 @@ export default function FamilyIndex(_: PageProps) {
     const qc = useQueryClient();
     const [showCreate, setShowCreate] = useState(false);
     const [showInvite, setShowInvite] = useState(false);
+    const [showJoin,   setShowJoin]   = useState(false);
 
     const { data: family, isLoading } = useQuery({
         queryKey: ['family'],
@@ -254,7 +396,7 @@ export default function FamilyIndex(_: PageProps) {
 
             <div className="p-6 space-y-6">
                 {!family ? (
-                    <EmptyFamily onCreate={() => setShowCreate(true)} />
+                    <EmptyFamily onCreate={() => setShowCreate(true)} onJoin={() => setShowJoin(true)} />
                 ) : (
                     <>
                         {/* Header */}
@@ -330,22 +472,24 @@ export default function FamilyIndex(_: PageProps) {
                             )}
                         </div>
 
-                        {/* Quick actions */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="rounded-2xl border border-dashed border-white/10 p-5 flex flex-col items-center text-center text-white/30 gap-2 hover:border-white/20 transition-colors cursor-pointer">
-                                <Target size={24} />
-                                <p className="text-sm font-medium text-white/50">Shared Goals</p>
-                                <p className="text-xs">Coming soon</p>
+                        {/* Shared Expenses */}
+                        <SharedExpensesPanel familyId={family.id} />
+
+                        {/* Roadmap cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="rounded-2xl border border-dashed border-white/10 p-5 flex items-center gap-4 text-white/30 hover:border-white/20 transition-colors">
+                                <Target size={24} className="flex-shrink-0" />
+                                <div>
+                                    <p className="text-sm font-medium text-white/50">Shared Goals</p>
+                                    <p className="text-xs">Coming in next release</p>
+                                </div>
                             </div>
-                            <div className="rounded-2xl border border-dashed border-white/10 p-5 flex flex-col items-center text-center text-white/30 gap-2 hover:border-white/20 transition-colors cursor-pointer">
-                                <Wallet size={24} />
-                                <p className="text-sm font-medium text-white/50">Shared Budget</p>
-                                <p className="text-xs">Coming soon</p>
-                            </div>
-                            <div className="rounded-2xl border border-dashed border-white/10 p-5 flex flex-col items-center text-center text-white/30 gap-2 hover:border-white/20 transition-colors cursor-pointer">
-                                <Receipt size={24} />
-                                <p className="text-sm font-medium text-white/50">Expense Approval</p>
-                                <p className="text-xs">Coming soon</p>
+                            <div className="rounded-2xl border border-dashed border-white/10 p-5 flex items-center gap-4 text-white/30 hover:border-white/20 transition-colors">
+                                <Wallet size={24} className="flex-shrink-0" />
+                                <div>
+                                    <p className="text-sm font-medium text-white/50">Shared Budget</p>
+                                    <p className="text-xs">Coming in next release</p>
+                                </div>
                             </div>
                         </div>
                     </>
@@ -358,6 +502,12 @@ export default function FamilyIndex(_: PageProps) {
                 )}
                 {showInvite && family && (
                     <InviteModal code={family.invite_code} onClose={() => setShowInvite(false)} />
+                )}
+                {showJoin && (
+                    <JoinWithCodeModal
+                        onClose={() => setShowJoin(false)}
+                        onJoined={() => qc.invalidateQueries({ queryKey: ['family'] })}
+                    />
                 )}
             </AnimatePresence>
         </AppLayout>
