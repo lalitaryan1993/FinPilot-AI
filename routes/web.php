@@ -78,5 +78,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/settings/ai', fn() => Inertia::render('Settings/AI'))->name('settings.ai');
     Route::get('/automations',          fn() => Inertia::render('AutomationRules/Index'))->name('automations');
     Route::get('/recurring-expenses',   fn() => Inertia::render('RecurringExpenses/Index'))->name('recurring-expenses');
-    Route::get('/money-flow', fn() => Inertia::render('MoneyFlow/Index'))->name('money-flow');
+    Route::get('/money-flow',      fn() => Inertia::render('MoneyFlow/Index'))->name('money-flow');
+    Route::get('/notifications',   fn() => Inertia::render('Notifications/Index'))->name('notifications');
 });

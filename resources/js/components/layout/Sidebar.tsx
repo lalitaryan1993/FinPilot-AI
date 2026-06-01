@@ -3,9 +3,9 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard, TrendingUp, Target, TrendingDown,
-    BarChart3, FileText, Users, Settings,
+    BarChart3, FileText, Users,
     Bot, ChevronRight, Wallet, Receipt, LogOut, User, ChevronUp,
-    DollarSign, RefreshCcw, MessageSquare, Sparkles, KeyRound, Zap, Repeat2,
+    DollarSign, RefreshCcw, MessageSquare, Sparkles, KeyRound, Zap, Repeat2, Bell,
 } from 'lucide-react';
 import { cn, getInitials } from '@/lib/utils';
 import type { User as UserType } from '@/types';
@@ -22,8 +22,9 @@ const navItems = [
     { href: '/subscriptions',      label: 'Subscriptions',    icon: RefreshCcw },
     { href: '/recurring-expenses', label: 'Recurring',         icon: Repeat2 },
     { href: '/documents',          label: 'Documents',         icon: FileText },
-    { href: '/family',         label: 'Family',       icon: Users },
-    { href: '/reports',        label: 'Reports',      icon: BarChart3 },
+    { href: '/family',         label: 'Family',        icon: Users },
+    { href: '/reports',        label: 'Reports',       icon: BarChart3 },
+    { href: '/notifications',  label: 'Notifications', icon: Bell },
 ];
 
 interface Props {

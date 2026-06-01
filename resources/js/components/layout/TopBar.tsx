@@ -238,7 +238,10 @@ export function TopBar({ title, user }: Props) {
                                     </div>
 
                                     <div className="border-t border-white/8 px-4 py-2.5">
-                                        <button className="flex w-full items-center justify-center gap-1 text-xs text-white/35 hover:text-blue-400 transition-colors">
+                                        <button
+                                            onClick={() => { setNotifOpen(false); router.visit('/notifications'); }}
+                                            className="flex w-full items-center justify-center gap-1 text-xs text-white/35 hover:text-blue-400 transition-colors"
+                                        >
                                             View all <ChevronRight className="h-3 w-3" />
                                         </button>
                                     </div>
