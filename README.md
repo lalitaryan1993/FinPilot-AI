@@ -1,152 +1,201 @@
-# FinPilot AI — Personal Finance OS
+<div align="center">
 
-> A full-featured, AI-powered personal finance dashboard built with Laravel 13, Inertia.js, React 19, and TypeScript. Manage expenses, income, budgets, investments, bank accounts, and more — all in one dark-themed, responsive interface.
+<img src="public/icons/icon-192.png" alt="FinPilot AI Logo" width="96" height="96" />
+
+# FinPilot AI
+
+### Your personal finance co-pilot — powered by AI
+
+[![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/lalitaryan1993/FinPilot-AI?style=flat-square&color=gold)](https://github.com/lalitaryan1993/FinPilot-AI/stargazers)
+
+<br/>
+
+**FinPilot AI** is a full-stack, open-source personal finance operating system.  
+Track every rupee, automate categorisation, import bank statements with AI, and get insights — all in a beautiful dark-themed dashboard.
+
+<br/>
+
+[**Live Demo**](https://github.com/lalitaryan1993/FinPilot-AI) · [**Report a Bug**](https://github.com/lalitaryan1993/FinPilot-AI/issues) · [**Request a Feature**](https://github.com/lalitaryan1993/FinPilot-AI/issues)
+
+</div>
 
 ---
 
-## Features
+## Why FinPilot AI?
 
-### Core Finance Modules
+Most finance apps are either too simple or locked behind a subscription. FinPilot AI is:
 
-| Module | Highlights |
+- **Self-hosted** — your financial data stays on your server
+- **AI-powered** — import receipts, statements, and SMS with one click
+- **Multi-provider** — works with Anthropic Claude, OpenAI, or Google Gemini
+- **Complete** — expenses, budgets, investments, bank accounts, goals, debts, family sharing, and more
+- **Beautiful** — dark-themed glassmorphism UI with smooth animations
+
+---
+
+## Screenshots
+
+> *Add screenshots after deployment. Suggested: Dashboard, Expenses card view, Money Flow statement, Budget alerts, Investment XIRR, Smart Import review.*
+
+---
+
+## Feature Overview
+
+### 💸 Expense Management
+- Card and table views with animated transitions
+- Category icons rendered from DB slugs
+- Filter by date range, category, payment method, amount range
+- Spending trend chart (Recharts bar chart)
+- Category breakdown with color-coded rings
+- Bulk delete with undo
+- Soft delete / trash & restore
+
+### 💰 Income Sources
+- Track salary, freelance, rental, dividends, and more
+- Income mix donut chart
+- Pause / resume income sources
+- Frequency-aware monthly equivalent calculation
+
+### 📊 Budget Tracking
+- Radial progress rings per budget
+- Real-time over-budget alert banner
+- Monthly / weekly / quarterly / custom periods
+- Rollover support
+- Alert threshold per budget (e.g. alert at 80%)
+
+### 🎯 Goals & Savings
+- Set savings targets with deadlines
+- Log contributions manually
+- Visual progress bar and projected completion date
+
+### 🏦 Money Flow (Bank Accounts)
+- Add savings, current, credit card, wallet, and FD accounts
+- Manual credit / debit transaction entry
+- **AI bank statement import** — upload image, PDF, or paste SMS text
+- Edit / delete transactions with automatic balance correction
+- Combined statement view: bank transactions + expenses in one unified timeline
+- Filter by credit / debit / all, date range presets
+
+### 📈 Investments
+- Track mutual funds, stocks, FD, RD, PPF, EPF, NPS, gold, real estate, crypto, bonds
+- **XIRR calculator** — computes annualised return per investment using Newton-Raphson, handles SIP monthly cash flows automatically
+- Portfolio allocation donut chart
+- SIP tracking with monthly amount and debit day
+
+### 💳 Subscriptions & Recurring
+- Track subscriptions by billing cycle
+- Auto-detect recurring expense patterns
+
+### 🤖 AI Features
+| Feature | What it does |
 |---|---|
-| **Dashboard** | Health score, net worth, spending overview, quick stats |
-| **Expenses** | CRUD, category icons, spending chart, amount range filter, payment method filter, bulk delete, card/table view |
-| **Income Sources** | Multiple types (salary, freelance, rental, etc.), income mix chart, pause/resume toggle |
-| **Budget** | Radial progress rings, over-budget alerts banner, period tracking (monthly/weekly/custom) |
-| **Goals** | Savings targets, contribution history, progress visualization |
-| **Debts & EMIs** | EMI calendar, payment tracking, debt-free date estimate |
-| **Investments** | Portfolio allocation donut chart, XIRR calculator (per investment), SIP tracking |
-| **Subscriptions** | Recurring subscription management, billing cycle tracking |
-| **Recurring Expenses** | Auto-detection of repeating expense patterns |
-| **Documents** | Upload and manage financial documents |
-| **Family** | Shared expenses, family member management, invite codes |
-| **Reports** | CSV export, PDF tax summary, visual reports |
+| **Smart Import** | Upload UPI screenshots, bank PDFs, salary slips — AI extracts all transactions for review |
+| **Bank SMS Import** | Paste bank SMS messages — AI parses credits and debits |
+| **AI Chat** | Ask FinPilot anything about your finances |
+| **Automation Rules** | Auto-categorise transactions by merchant or description |
+| **Multi-provider** | Anthropic Claude, OpenAI GPT-4o, Google Gemini — switch anytime |
 
-### Money Flow (Bank Accounts)
-
-- Add and manage multiple bank accounts (Savings, Current, Credit Card, Wallet, FD)
-- Manual transaction entry with credit/debit toggle
-- **AI-powered statement import** — upload a bank statement image/PDF or paste SMS text; AI extracts all transactions automatically
-- Edit and delete individual bank transactions (balance auto-corrected)
-- Combined statement view — unified timeline of bank transactions + expenses with date grouping, credit/debit filter, date range presets
-
-### AI Features
-
-- **Smart Import** — Upload UPI screenshots, bank statements, receipts, salary slips; AI extracts transactions for review and confirm
-- **Multi-provider AI** — Anthropic Claude, OpenAI GPT-4o, Google Gemini (configurable per user in Settings)
-- **Anthropic native PDF support** — PDFs sent directly to Claude via document API (no text stripping)
-- **AI Chat** — Ask FinPilot questions about your finances
-- **Automation Rules** — Rule-based transaction categorisation
+### 👨‍👩‍👧 Other Modules
+- **Family** — shared expenses, invite members with a code
+- **Debts & EMIs** — EMI calendar, payment history, debt-free date
+- **Documents** — upload and organise financial documents
+- **Reports** — CSV export, PDF tax summary
+- **Health Score** — composite financial wellness score
+- **Notifications** — in-app alerts for budget breaches, large transactions, goal milestones
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
+| | Technology |
 |---|---|
-| Backend | PHP 8.3+, Laravel 13 |
-| Frontend | React 19, TypeScript, Inertia.js v3 |
-| Styling | Tailwind CSS v4, Framer Motion |
-| Data fetching | TanStack Query v5 |
-| Charts | Recharts |
-| Auth | Laravel Sanctum |
-| Database | SQLite (dev) / MySQL (Docker / prod) |
-| Cache & Queue | Database (dev) / Redis (Docker / prod) |
-| AI Providers | Anthropic Claude, OpenAI, Google Gemini |
-| Build tool | Vite 8 |
+| **Backend** | PHP 8.3, Laravel 13 |
+| **Frontend** | React 19, TypeScript, Inertia.js v3 |
+| **Styling** | Tailwind CSS v4, Framer Motion |
+| **Data fetching** | TanStack Query v5 |
+| **Charts** | Recharts |
+| **Auth** | Laravel Sanctum |
+| **Database** | SQLite (dev) · MySQL 8 (production) |
+| **Cache / Queue** | Database (dev) · Redis (production) |
+| **AI** | Anthropic Claude · OpenAI · Google Gemini |
+| **Build** | Vite 8 |
 
 ---
 
-## Requirements
+## Getting Started
+
+### Prerequisites
 
 - PHP 8.3+
 - Composer 2
-- Node.js 20+ and npm
-- SQLite (zero-config for local dev) **or** MySQL 8 (Docker / production)
-- At least one AI API key (Anthropic, OpenAI, or Gemini) — can also be added per-user inside the app
+- Node.js 20+ & npm
+- SQLite **or** MySQL 8
+- One AI API key (Anthropic, OpenAI, or Gemini) — optional at setup, users can add their own in Settings
 
 ---
 
-## Local Setup (php artisan serve)
-
-### 1. Clone and install
+### Option A — Local Setup (SQLite + artisan serve)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/finpilot-ai.git
-cd finpilot-ai
+# 1. Clone
+git clone https://github.com/lalitaryan1993/FinPilot-AI.git
+cd FinPilot-AI
 
+# 2. Install dependencies
 composer install
 npm install
-```
 
-### 2. Configure environment
-
-```bash
+# 3. Environment
 cp .env.example .env
 php artisan key:generate
 ```
 
-Edit `.env`:
+Edit `.env` — the only required change:
 
 ```env
-APP_NAME="FinPilot AI"
 APP_URL=http://localhost:8000
 
-# SQLite — no extra server needed
-DB_CONNECTION=sqlite
-
-# AI keys — add at least one (users can also set their own in Settings)
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxx
-OPENAI_API_KEY=sk-xxxxxxxx
-GEMINI_API_KEY=AIxxxxxxxx
+# Add at least one AI key (optional — users can add their own in Settings)
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=AI...
 ```
 
-### 3. Migrate and seed
-
 ```bash
+# 4. Database
 touch database/database.sqlite
-
 php artisan migrate --seed
-```
 
-### 4. Build frontend
-
-```bash
-# Production build
+# 5. Build frontend
 npm run build
 
-# OR development with hot-reload (run in a second terminal)
-npm run dev
-```
-
-### 5. Start the server
-
-```bash
+# 6. Start
 php artisan serve
 ```
 
-Open **http://localhost:8000**, register an account, and you're ready.
+Open **http://localhost:8000** → Register → you're in.
 
 ---
 
-## Docker Setup (MySQL + Redis)
-
-### 1. Clone and copy env
+### Option B — Docker (MySQL + Redis + Queue worker)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/finpilot-ai.git
-cd finpilot-ai
+# 1. Clone & configure
+git clone https://github.com/lalitaryan1993/FinPilot-AI.git
+cd FinPilot-AI
 cp .env.example .env
 ```
 
-### 2. Configure `.env` for Docker
+Set these in `.env`:
 
 ```env
-APP_KEY=                    # generated in step 4
 DB_CONNECTION=mysql
 DB_HOST=mysql
-DB_PORT=3306
 DB_DATABASE=finpilot
 DB_USERNAME=finpilot
 DB_PASSWORD=secret
@@ -156,25 +205,19 @@ CACHE_STORE=redis
 SESSION_DRIVER=redis
 QUEUE_CONNECTION=redis
 
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxx
-OPENAI_API_KEY=sk-xxxxxxxx
-GEMINI_API_KEY=AIxxxxxxxx
+ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### 3. Start containers
-
 ```bash
+# 2. Build & start
 docker compose up -d --build
-```
 
-### 4. Initialise the app
-
-```bash
+# 3. Initialise
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
 ```
 
-Visit **http://localhost:8000**
+Open **http://localhost:8000**
 
 ---
 
@@ -182,10 +225,10 @@ Visit **http://localhost:8000**
 
 | Variable | Description | Default |
 |---|---|---|
-| `APP_KEY` | Laravel encryption key (run `php artisan key:generate`) | — |
-| `APP_URL` | Public URL | `http://localhost` |
+| `APP_KEY` | Encryption key — run `php artisan key:generate` | — |
+| `APP_URL` | Your app's public URL | `http://localhost` |
 | `DB_CONNECTION` | `sqlite` or `mysql` | `sqlite` |
-| `DB_HOST` | MySQL host | `127.0.0.1` |
+| `DB_HOST` | MySQL host (Docker: `mysql`) | `127.0.0.1` |
 | `DB_DATABASE` | Database name | `laravel` |
 | `DB_USERNAME` | Database user | `root` |
 | `DB_PASSWORD` | Database password | — |
@@ -196,95 +239,92 @@ Visit **http://localhost:8000**
 | `SESSION_DRIVER` | `database` or `redis` | `database` |
 | `QUEUE_CONNECTION` | `database` or `redis` | `database` |
 
-> AI keys are **optional at setup time**. Each user can add their own provider keys in **Settings → AI Configuration** inside the app.
+> **Tip:** AI keys are optional at the server level. Every user can configure their own provider keys in **Settings → AI Configuration** inside the app.
 
 ---
 
-## Project Structure
+## AI Provider Comparison
 
-```
-finpilot-ai/
-├── app/
-│   ├── Http/Controllers/Api/V1/    # REST API controllers
-│   ├── Jobs/ProcessSmartImportJob  # AI extraction job
-│   └── Models/                     # Eloquent models (all with SoftDeletes)
-├── database/
-│   └── migrations/                 # 35+ migrations
-├── resources/
-│   └── js/
-│       ├── components/
-│       │   ├── layout/             # AppLayout, Sidebar
-│       │   └── ui/                 # GlassCard, DeleteConfirmModal, etc.
-│       └── pages/
-│           ├── Dashboard/
-│           ├── Expenses/           # Index, Create, Edit, Detail
-│           ├── Budget/
-│           ├── Goals/
-│           ├── Investments/        # Portfolio + XIRR calculator
-│           ├── IncomeSources/
-│           ├── MoneyFlow/          # Bank accounts + statement timeline
-│           ├── AI/                 # Chat + Smart Import
-│           ├── Settings/
-│           └── ...
-└── routes/
-    ├── api.php                     # All /api/v1/* routes
-    └── web.php                     # Inertia page routes
-```
-
----
-
-## AI Configuration
-
-After registering, go to **Settings → AI Configuration** to configure your provider.
-
-| Provider | Models used | Best for |
+| Provider | Models | Best for |
 |---|---|---|
-| **Anthropic Claude** | claude-opus-4-8, claude-sonnet-4-6 | Smart Import, PDF parsing, AI Chat |
-| **OpenAI** | gpt-4o, gpt-4o-mini | Smart Import, AI Chat |
-| **Google Gemini** | gemini-1.5-flash | Image import, AI Chat |
+| **Anthropic Claude** ⭐ | claude-opus-4-8, claude-sonnet-4-6 | PDF statements, Smart Import, Chat — recommended |
+| **OpenAI** | gpt-4o, gpt-4o-mini | Image import, Chat |
+| **Google Gemini** | gemini-1.5-flash | Image import, Chat |
 
-### What Smart Import can read
-
-- UPI payment screenshots (GPay, PhonePe, Paytm, BHIM)
-- Bank statement PDFs — sent natively to Claude, no text stripping
-- Bank statement screenshots / photos
+### Smart Import — supported document types
+- UPI screenshots (GPay, PhonePe, Paytm, BHIM)
+- Bank statement PDFs — sent natively to Claude (no text stripping)
+- Bank statement photos / screenshots
 - Credit card statements
 - Salary slips and receipts
 - Pasted bank SMS messages
 
 ---
 
-## API Reference (summary)
-
-All endpoints require authentication (`/api/v1/auth/login` → session cookie or Bearer token).
+## Project Structure
 
 ```
-POST /api/v1/auth/register
-POST /api/v1/auth/login
+FinPilot-AI/
+├── app/
+│   ├── Http/Controllers/Api/V1/   # REST API — one controller per module
+│   ├── Jobs/ProcessSmartImportJob # AI extraction pipeline
+│   ├── Models/                    # Eloquent — all with SoftDeletes
+│   └── Ai/                        # Agents & tools for AI chat
+├── database/migrations/           # 35+ migrations
+├── resources/js/
+│   ├── components/
+│   │   ├── layout/                # AppLayout, Sidebar, TopBar
+│   │   └── ui/                    # GlassCard, DeleteConfirmModal …
+│   └── pages/
+│       ├── Dashboard/
+│       ├── Expenses/              # Index · Create · Edit · Detail
+│       ├── Budget/
+│       ├── Investments/           # Portfolio + XIRR calculator
+│       ├── MoneyFlow/             # Bank accounts + unified statement
+│       ├── AI/                    # Chat + Smart Import
+│       └── Settings/              # Profile + AI Configuration
+└── routes/
+    ├── api.php                    # All /api/v1/* routes
+    └── web.php                    # Inertia page routes
+```
 
-GET  /api/v1/dashboard
-GET  /api/v1/expenses          ?category=&date_from=&date_to=&payment_method=&amount_min=&amount_max=&sort_by=&sort_dir=
-POST /api/v1/expenses
-PUT  /api/v1/expenses/{id}
-DEL  /api/v1/expenses/{id}
+---
 
-GET  /api/v1/budgets
-GET  /api/v1/investments/portfolio
+## API Overview
 
-GET  /api/v1/bank-accounts
-POST /api/v1/bank-accounts
-PUT  /api/v1/bank-accounts/{id}
-DEL  /api/v1/bank-accounts/{id}
-POST /api/v1/bank-accounts/{id}/transactions
-POST /api/v1/bank-accounts/import-statement    # multipart: account_id + file|text
-GET  /api/v1/money-flow                        # unified timeline (bank + expenses)
+All endpoints live under `/api/v1` and require Sanctum authentication.
 
-GET  /api/v1/bank-transactions/{id}
-PUT  /api/v1/bank-transactions/{id}
-DEL  /api/v1/bank-transactions/{id}
+```
+# Auth
+POST   /api/v1/auth/register
+POST   /api/v1/auth/login
+POST   /api/v1/auth/logout
 
-POST /api/v1/smart-imports                     # AI Smart Import (file upload)
-POST /api/v1/ai/chat
+# Core modules (all support soft delete / restore)
+GET    /api/v1/expenses            # ?date_from &date_to &category &payment_method &amount_min &amount_max &sort_by &sort_dir
+POST   /api/v1/expenses
+PUT    /api/v1/expenses/{id}
+DELETE /api/v1/expenses/{id}
+
+GET    /api/v1/budgets
+GET    /api/v1/investments/portfolio
+GET    /api/v1/health-score
+
+# Bank accounts & money flow
+GET    /api/v1/bank-accounts
+POST   /api/v1/bank-accounts
+PUT    /api/v1/bank-accounts/{id}
+DELETE /api/v1/bank-accounts/{id}
+POST   /api/v1/bank-accounts/{id}/transactions
+POST   /api/v1/bank-accounts/import-statement     # multipart: account_id + file or text
+GET    /api/v1/money-flow                         # unified timeline (bank + expenses)
+GET    /api/v1/bank-transactions/{id}
+PUT    /api/v1/bank-transactions/{id}
+DELETE /api/v1/bank-transactions/{id}
+
+# AI
+POST   /api/v1/smart-imports                      # AI Smart Import (file upload)
+POST   /api/v1/ai/chat
 ```
 
 ---
@@ -292,13 +332,13 @@ POST /api/v1/ai/chat
 ## Useful Commands
 
 ```bash
-# Reset database with seed data
+# Reset database with fresh seed data
 php artisan migrate:fresh --seed
 
-# View all API routes
+# List all API routes
 php artisan route:list --path="api/v1"
 
-# Clear caches after config changes
+# Clear all caches after config changes
 php artisan optimize:clear
 
 # Run tests
@@ -306,39 +346,64 @@ php artisan test
 
 # TypeScript check
 npx tsc --noEmit
+
+# Hot-reload dev server (run alongside artisan serve)
+npm run dev
 ```
-
----
-
-## Contributing
-
-1. Fork the repo
-2. Create a branch: `git checkout -b feature/your-feature`
-3. Commit: `git commit -m "feat: add your feature"`
-4. Push: `git push origin feature/your-feature`
-5. Open a Pull Request
-
-Please keep PRs focused — one feature or fix per PR.
 
 ---
 
 ## Roadmap
 
 - [ ] Recurring expense auto-categorisation
-- [ ] Public demo mode (read-only with seeded data)
+- [ ] Public demo mode with read-only seeded data
 - [ ] Budget alerts via Web Push (VAPID)
 - [ ] Mobile app (Capacitor / React Native)
-- [ ] Multi-currency support with live exchange rates
-- [ ] Tax report generation (Indian ITR format)
+- [ ] Multi-currency with live exchange rates
+- [ ] Indian ITR tax report generation
+- [ ] Plaid / Finbox bank feed integration
+
+---
+
+## Contributing
+
+Contributions are welcome! Here's how:
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/amazing-feature`
+3. Commit: `git commit -m "feat: add amazing feature"`
+4. Push: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+Please keep PRs focused — one feature or fix per PR. For major changes, open an issue first to discuss the approach.
+
+---
+
+## Author
+
+**Lalit Aryan**
+
+[![GitHub](https://img.shields.io/badge/GitHub-lalitaryan1993-181717?style=flat-square&logo=github)](https://github.com/lalitaryan1993)
+[![Email](https://img.shields.io/badge/Email-lalitaryan1993%40gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:lalitaryan1993@gmail.com)
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+Distributed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
 ---
 
-## Built with
+## Acknowledgements
+
+<div align="center">
+
+Built with open-source technologies ❤️
 
 [Laravel](https://laravel.com) · [Inertia.js](https://inertiajs.com) · [React](https://react.dev) · [Tailwind CSS](https://tailwindcss.com) · [Framer Motion](https://www.framer.com/motion/) · [Recharts](https://recharts.org) · [TanStack Query](https://tanstack.com/query) · [Lucide Icons](https://lucide.dev) · [Anthropic Claude](https://anthropic.com)
+
+<br/>
+
+⭐ **Star this repo if you find it useful!** It helps others discover it.
+
+</div>
