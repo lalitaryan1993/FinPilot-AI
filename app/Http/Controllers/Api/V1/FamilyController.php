@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Budget;
 use App\Models\Expense;
 use App\Models\Family;
 use App\Models\FamilyMember;
+use App\Models\Goal;
+use App\Models\GoalContribution;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -206,6 +209,163 @@ class FamilyController extends Controller
     }
 
     // ── Helpers ───────────────────────────────────────────────────
+    // ── Shared Goals ──────────────────────────────────────────────
+    public function sharedGoals(Request $request): JsonResponse
+    {
+        $user   = $request->user();
+        $family = $this->requireFamily($user);
+
+        $goals = Goal::where('family_id', $family->id)
+            ->whereIn('status', ['active', 'completed'])
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn(Goal $g) => [
+                'id'             => $g->id,
+                'name'           => $g->name,
+                'type'           => $g->type,
+                'icon'           => $g->icon,
+                'color'          => $g->color ?? '#3B82F6',
+                'target_amount'  => (float) $g->target_amount,
+                'current_amount' => (float) $g->current_amount,
+                'monthly_target' => (float) ($g->monthly_target ?? 0),
+                'target_date'    => $g->target_date?->format('Y-m-d'),
+                'progress'       => round($g->progressPercent(), 1),
+                'status'         => $g->status,
+            ]);
+
+        return response()->json(['success' => true, 'data' => $goals]);
+    }
+
+    public function storeSharedGoal(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name'           => 'required|string|max:255',
+            'type'           => 'required|in:emergency_fund,home,car,education,vacation,wedding,retirement,business,custom',
+            'target_amount'  => 'required|numeric|min:1',
+            'monthly_target' => 'nullable|numeric|min:0',
+            'target_date'    => 'nullable|date|after:today',
+        ]);
+
+        $user   = $request->user();
+        $family = $this->requireFamily($user);
+        $member = FamilyMember::where('family_id', $family->id)->where('user_id', $user->id)->first();
+
+        if (!in_array($member?->role, ['admin', 'co_admin'])) {
+            return response()->json(['success' => false, 'message' => 'Only admins can create shared goals.'], 403);
+        }
+
+        $goal = Goal::create([
+            'user_id'        => $user->id,
+            'family_id'      => $family->id,
+            'name'           => $request->name,
+            'type'           => $request->type,
+            'target_amount'  => $request->target_amount,
+            'monthly_target' => $request->monthly_target,
+            'target_date'    => $request->target_date,
+            'status'         => 'active',
+            'priority'       => 5,
+        ]);
+
+        return response()->json(['success' => true, 'data' => $goal, 'message' => 'Shared goal created!'], 201);
+    }
+
+    public function contributeSharedGoal(Request $request, int $goalId): JsonResponse
+    {
+        $request->validate(['amount' => 'required|numeric|min:1', 'note' => 'nullable|string|max:255']);
+
+        $user   = $request->user();
+        $family = $this->requireFamily($user);
+
+        $goal = Goal::where('id', $goalId)->where('family_id', $family->id)->firstOrFail();
+
+        $goal->increment('current_amount', $request->amount);
+
+        GoalContribution::create([
+            'goal_id' => $goal->id,
+            'user_id' => $user->id,
+            'amount'  => $request->amount,
+            'note'    => $request->note ?? null,
+            'source'  => 'family',
+        ]);
+
+        $fresh = $goal->fresh();
+        if ((float) $fresh->current_amount >= (float) $fresh->target_amount) {
+            $fresh->update(['status' => 'completed', 'completed_at' => now()]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => $fresh,
+            'message' => '₹' . number_format($request->amount, 0) . ' added to goal!',
+        ]);
+    }
+
+    // ── Shared Budgets ────────────────────────────────────────────
+    public function sharedBudgets(Request $request): JsonResponse
+    {
+        $user   = $request->user();
+        $family = $this->requireFamily($user);
+
+        $month = $request->input('month', now()->format('Y-m'));
+        [$year, $mon] = explode('-', $month);
+
+        $budgets = Budget::where('family_id', $family->id)
+            ->where('is_active', true)
+            ->whereYear('period_start', (int) $year)
+            ->whereMonth('period_start', (int) $mon)
+            ->with('category:id,name,icon,color')
+            ->get()
+            ->map(fn(Budget $b) => [
+                'id'          => $b->id,
+                'name'        => $b->name,
+                'amount'      => (float) $b->amount,
+                'spent'       => (float) $b->spent_amount,
+                'spent_pct'   => round($b->spentPercent(), 1),
+                'remaining'   => (float) $b->remainingAmount(),
+                'is_breached' => $b->isBreached(),
+                'category'    => $b->category,
+            ]);
+
+        return response()->json(['success' => true, 'data' => $budgets]);
+    }
+
+    public function storeSharedBudget(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'amount'      => 'required|numeric|min:1',
+            'category_id' => 'nullable|exists:categories,id',
+        ]);
+
+        $user   = $request->user();
+        $family = $this->requireFamily($user);
+        $member = FamilyMember::where('family_id', $family->id)->where('user_id', $user->id)->first();
+
+        if (!in_array($member?->role, ['admin', 'co_admin'])) {
+            return response()->json(['success' => false, 'message' => 'Only admins can create shared budgets.'], 403);
+        }
+
+        $now    = now();
+        $budget = Budget::create([
+            'user_id'      => $user->id,
+            'family_id'    => $family->id,
+            'name'         => $request->name,
+            'amount'       => $request->amount,
+            'category_id'  => $request->category_id,
+            'period'       => 'monthly',
+            'period_start' => $now->startOfMonth()->toDateString(),
+            'period_end'   => $now->copy()->endOfMonth()->toDateString(),
+            'is_active'    => true,
+            'alert_at_percent' => 80,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data'    => $budget->load('category'),
+            'message' => 'Shared budget created!',
+        ], 201);
+    }
+
     private function requireFamily($user): Family
     {
         if (!$user->family_id) {

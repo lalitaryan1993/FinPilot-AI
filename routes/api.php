@@ -149,9 +149,14 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/join',                   [FamilyController::class, 'join']);
         Route::post('/leave',                  [FamilyController::class, 'leave']);
         Route::post('/regenerate-code',        [FamilyController::class, 'regenerateCode']);
-        Route::get('/shared-expenses',         [FamilyController::class, 'sharedExpenses']);
-        Route::put('/members/{memberId}',      [FamilyController::class, 'updateMember']);
-        Route::delete('/members/{memberId}',   [FamilyController::class, 'removeMember']);
+        Route::get('/shared-expenses',                       [FamilyController::class, 'sharedExpenses']);
+        Route::get('/shared-goals',                          [FamilyController::class, 'sharedGoals']);
+        Route::post('/shared-goals',                         [FamilyController::class, 'storeSharedGoal']);
+        Route::post('/shared-goals/{goalId}/contribute',     [FamilyController::class, 'contributeSharedGoal']);
+        Route::get('/shared-budgets',                        [FamilyController::class, 'sharedBudgets']);
+        Route::post('/shared-budgets',                       [FamilyController::class, 'storeSharedBudget']);
+        Route::put('/members/{memberId}',                    [FamilyController::class, 'updateMember']);
+        Route::delete('/members/{memberId}',                 [FamilyController::class, 'removeMember']);
     });
 
     // Export
