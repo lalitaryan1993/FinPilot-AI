@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\BudgetBreached;
 use App\Http\Controllers\Controller;
 use App\Jobs\EvaluateAutomationRulesJob;
+use App\Models\Budget;
 use App\Models\Expense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -59,6 +61,9 @@ class ExpenseController extends Controller
 
         event(new \App\Events\ExpenseCreated($expense));
         \App\Jobs\EvaluateAutomationRulesJob::dispatch($expense);
+
+        // Check if this expense pushes any matching budget past alert threshold
+        $this->checkBudgetAlerts($request->user(), $expense);
 
         return response()->json([
             'success' => true,
@@ -152,5 +157,23 @@ class ExpenseController extends Controller
                 'currency'    => $user->currency,
             ],
         ]);
+    }
+
+    private function checkBudgetAlerts(\App\Models\User $user, Expense $expense): void
+    {
+        $budgets = Budget::where('user_id', $user->id)
+            ->where('category_id', $expense->category_id)
+            ->where('is_active', true)
+            ->get();
+
+        foreach ($budgets as $budget) {
+            $pct = $budget->spentPercent();
+            $threshold = $budget->alert_at_percent ?? 80;
+
+            // Fire once when crossing the alert threshold or 100%
+            if ($pct >= $threshold || $pct >= 100) {
+                event(new BudgetBreached($user, $budget, $pct));
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { cn, getInitials } from '@/lib/utils';
 import { ThemePanel } from './ThemePanel';
+import { useReverbNotifications } from '@/hooks/useReverbNotifications';
 import type { User as UserType } from '@/types';
 
 interface Props {
@@ -86,6 +87,15 @@ export function TopBar({ title, user, onMenuClick, onSearchClick }: Props) {
 
     useClickOutside(notifRef, () => setNotifOpen(false));
     useClickOutside(userRef,  () => setUserOpen(false));
+
+    // Real-time: prepend new notification instantly when Reverb pushes it
+    useReverbNotifications({
+        userId: user.id,
+        onNotification: (n) => {
+            setNotifications(prev => [n, ...prev]);
+            setUnreadCount(c => c + 1);
+        },
+    });
 
     const fetchNotifications = useCallback(async () => {
         try {

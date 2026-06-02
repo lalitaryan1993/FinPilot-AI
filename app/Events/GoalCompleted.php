@@ -2,35 +2,41 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
+use App\Models\Goal;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 
-class GoalCompleted
+class GoalCompleted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(public readonly Goal $goal) {}
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, Channel>
-     */
     public function broadcastOn(): array
     {
+        return [new PrivateChannel("user.{$this->goal->user_id}")];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'notification.new';
+    }
+
+    public function broadcastWith(): array
+    {
         return [
-            new PrivateChannel('channel-name'),
+            'id'         => (string) Str::uuid(),
+            'type'       => 'success',
+            'icon'       => 'target',
+            'title'      => "Goal achieved: {$this->goal->name} 🎉",
+            'body'       => "You've reached your ₹" . number_format($this->goal->target_amount, 0) . " goal. Congratulations!",
+            'link'       => "/goals/{$this->goal->id}",
+            'read'       => false,
+            'created_at' => now()->toISOString(),
         ];
     }
 }

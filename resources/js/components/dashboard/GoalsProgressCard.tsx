@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from '@inertiajs/react';
-import { Target, ChevronRight } from 'lucide-react';
+import { Target, ChevronRight, ArrowRight } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { CurrencyDisplay } from '@/components/ui/CurrencyDisplay';
 import { formatPercent } from '@/lib/utils';
@@ -55,30 +55,36 @@ export function GoalsProgressCard({ goals }: Props) {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.08 }}
                         >
-                            <div className="flex items-center justify-between mb-1.5">
-                                <div className="flex items-center gap-2 min-w-0">
-                                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full" style={{ background: `${color}22` }}>
-                                        <div className="h-2 w-2 rounded-full" style={{ background: color }} />
+                            <Link
+                                href={`/goals/${goal.id}`}
+                                className="group block rounded-xl p-2 -mx-2 hover:bg-white/4 transition-colors"
+                            >
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ background: `${color}22` }}>
+                                            <div className="h-2 w-2 rounded-full" style={{ background: color }} />
+                                        </div>
+                                        <span className="truncate text-sm font-medium text-white/80 group-hover:text-white transition-colors">{goal.name}</span>
                                     </div>
-                                    <span className="truncate text-sm font-medium text-white/80">{goal.name}</span>
+                                    <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                                        <span className="font-mono text-xs font-semibold" style={{ color }}>{formatPercent(pct, 0)}</span>
+                                        <ArrowRight className="h-3 w-3 text-white/20 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />
+                                    </div>
                                 </div>
-                                <span className="ml-2 flex-shrink-0 font-mono text-xs font-semibold" style={{ color }}>
-                                    {formatPercent(pct, 0)}
-                                </span>
-                            </div>
-                            <div className="relative h-1.5 overflow-hidden rounded-full bg-white/8">
-                                <motion.div
-                                    className="absolute inset-y-0 left-0 rounded-full"
-                                    style={{ background: color }}
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${pct}%` }}
-                                    transition={{ duration: 0.8, delay: 0.3 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                                />
-                            </div>
-                            <div className="mt-1 flex items-center justify-between text-[10px] text-white/30">
-                                <CurrencyDisplay amount={goal.current_amount} size="xs" className="text-white/40" />
-                                <CurrencyDisplay amount={goal.target_amount}  size="xs" className="text-white/30" />
-                            </div>
+                                <div className="relative h-1.5 overflow-hidden rounded-full bg-white/8">
+                                    <motion.div
+                                        className="absolute inset-y-0 left-0 rounded-full"
+                                        style={{ background: color }}
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${pct}%` }}
+                                        transition={{ duration: 0.8, delay: 0.3 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                                    />
+                                </div>
+                                <div className="mt-1 flex items-center justify-between text-[10px] text-white/30">
+                                    <CurrencyDisplay amount={goal.current_amount} size="xs" className="text-white/40" />
+                                    <CurrencyDisplay amount={goal.target_amount}  size="xs" className="text-white/30" />
+                                </div>
+                            </Link>
                         </motion.div>
                     );
                 })}
